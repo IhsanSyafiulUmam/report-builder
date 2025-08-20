@@ -1,0 +1,9 @@
+export { default as sales_overview } from './sectionProcessors/sales_overview';
+export { default as platform_sales_value } from './sectionProcessors/platform_sales_value';
+export { default as brand_performance_platform } from './sectionProcessors/brand_performance_platform';
+export { default as brand_performance_sub_category } from './sectionProcessors/brand_performance_sub_category';
+export { default as top_listing_performance } from './sectionProcessors/top_listing_performance';
+export { default as top_categories } from './sectionProcessors/top_categories';
+export { default as store_sales_value } from './sectionProcessors/store_sales_value';
+export { default as volume_sales_value } from './sectionProcessors/volume_sales_value';
+export { default as top_reseller } from './sectionProcessors/top_reseller';
