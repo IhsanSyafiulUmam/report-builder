@@ -1,7 +1,7 @@
 
 export async function runQuery(sql: string, params?: Record<string, unknown>) {
   try {
-    const response = await fetch("https://be-report.markethac.id/api/bigquery", {
+    const response = await fetch("http://localhost:4000/api/bigquery", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
