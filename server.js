@@ -12,10 +12,10 @@ const PORT = process.env.PORT || 3000;
 const DISABLE_CSP = process.env.DISABLE_CSP === "1";
 const CONNECT_SRC = [
   "'self'",
-  "https://bqwsjjucakgtxpztcqra.supabase.co",
-  "wss://bqwsjjucakgtxpztcqra.supabase.co",
-  "https://be-report.markethac.id",
-  "https://*.markethac.id",
+  "https://qxzqwqxqjbawsrftrhzz.supabase.co",
+  "wss://qxzqwqxqjbawsrftrhzz.supabase.co",
+  "https://be-report.san-labs.my.id",
+  "https://*.san-labs.my.id",
   "http://localhost:4000",
   "http://127.0.0.1:4000",
 ];
