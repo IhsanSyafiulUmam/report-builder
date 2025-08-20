@@ -8,7 +8,7 @@ module.exports = {
     },
     {
       name: "report-backend",
-      script: "/root/.nvm/versions/node/v20.18.1/bin/node",
+      script: "node",
       args: "api/bigquery.js",
       watch: true,
     }
