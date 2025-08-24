@@ -19,35 +19,57 @@ const InsightManager: React.FC<InsightManagerProps> = ({
   onAddInsight,
   onEditInsight,
   onDeleteInsight,
-  className = "flex flex-col h-full space-y-3",
+  className = "flex flex-col h-full",
   width = 400,
   height = 300,
   onResize,
 }) => {
   const content = (
     <div className={className}>
-      <div className="flex-1 space-y-3 overflow-auto">
-        {insights.map((insight, idx) => (
-          <InsightCard
-            key={idx}
-            title={insight.title}
-            body={insight.body}
-            isEditable={isEditable}
-            onEditTitle={(val) => onEditInsight?.(idx, "title", val)}
-            onEditBody={(val) => onEditInsight?.(idx, "body", val)}
-            showDelete={isEditable}
-            onDelete={() => onDeleteInsight?.(idx)}
-          />
-        ))}
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+        <h3 className="text-sm font-semibold text-gray-900">Insights</h3>
+        {isEditable && (
+          <button
+            className="px-2 py-1 text-xs text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+            onClick={onAddInsight}
+          >
+            + Add
+          </button>
+        )}
       </div>
-      {isEditable && (
-        <button
-          className="flex-shrink-0 px-3 py-2 mt-2 text-xs text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
-          onClick={onAddInsight}
-        >
-          + Tambah Insight
-        </button>
-      )}
+      
+      {/* Scrollable Content Area */}
+      <div 
+        className="flex-1 overflow-y-auto overflow-x-hidden pr-2 space-y-2"
+        style={{
+          maxHeight: '400px', // Ensure it fits within slide dimensions
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#cbd5e1 transparent'
+        }}
+      >
+        {insights.length > 0 ? (
+          insights.map((insight, idx) => (
+            <InsightCard
+              key={idx}
+              title={insight.title}
+              body={insight.body}
+              isEditable={isEditable}
+              onEditTitle={(val) => onEditInsight?.(idx, "title", val)}
+              onEditBody={(val) => onEditInsight?.(idx, "body", val)}
+              showDelete={isEditable}
+              onDelete={() => onDeleteInsight?.(idx)}
+            />
+          ))
+        ) : (
+          <div className="text-center py-6 text-gray-500">
+            <div className="text-sm">No insights yet</div>
+            {isEditable && (
+              <div className="text-xs mt-1">Click "+ Add" to create your first insight</div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 

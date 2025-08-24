@@ -139,12 +139,6 @@ const VolumeSalesValueSection: React.FC<VolumeSalesValueProps> = ({
           />
         </div>
 
-        <h2 className="mb-6 text-2xl font-semibold text-gray-800">
-          51–100 ml memimpin pada Februari 2025:{" "}
-          <span className="font-bold text-green-600">2.8 Bio</span> disusul oleh
-          volume{" "}
-          <span className="font-bold text-blue-600">10–20 ml (2.6 Bio)</span>
-        </h2>
 
         <div className="flex flex-col gap-8 lg:grid lg:grid-cols-5">
           <div className="p-6 bg-white shadow-sm lg:col-span-3 rounded-2xl">

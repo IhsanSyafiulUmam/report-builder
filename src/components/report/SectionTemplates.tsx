@@ -6,6 +6,11 @@ import {
   Image,
   DollarSign,
   ShoppingCart,
+  Users,
+  Package,
+  Calendar,
+  MapPin,
+  CreditCard,
 } from "lucide-react";
 
 interface SectionTemplatesProps {
@@ -123,6 +128,42 @@ const SectionTemplates: React.FC<SectionTemplatesProps> = ({
       description: "Brand performance analysis across different channels",
       icon: BarChart3,
       color: "green",
+    },
+    // NEW CSV-BASED SECTIONS
+    {
+      type: "customer_performance",
+      title: "Customer Performance Analysis",
+      description: "Comprehensive customer analysis with retention insights",
+      icon: Users,
+      color: "blue",
+    },
+    {
+      type: "product_insights",
+      title: "Product Performance Insights",
+      description: "Product analysis with pricing and trend insights",
+      icon: Package,
+      color: "green",
+    },
+    {
+      type: "seasonal_patterns",
+      title: "Seasonal Sales Patterns",
+      description: "Monthly and seasonal sales trend analysis",
+      icon: Calendar,
+      color: "purple",
+    },
+    {
+      type: "geographic_intelligence",
+      title: "Geographic Sales Intelligence",
+      description: "Location-based sales performance and market penetration",
+      icon: MapPin,
+      color: "emerald",
+    },
+    {
+      type: "payment_terms",
+      title: "Payment Terms Analysis",
+      description: "Payment terms impact and customer preference analysis",
+      icon: CreditCard,
+      color: "orange",
     },
   ];
 

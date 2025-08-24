@@ -52,13 +52,13 @@ const InsightCard = ({
     { name: "Black", value: "#000000", class: "text-black" },
   ];
 
-  // Font size options
+  // Font size options - optimized for slide layout
   const fontSizes = [
-    { name: "Heading 1", tag: "h1", class: "text-3xl font-bold" },
-    { name: "Heading 2", tag: "h2", class: "text-2xl font-bold" },
-    { name: "Heading 3", tag: "h3", class: "text-xl font-semibold" },
-    { name: "Heading 4", tag: "h4", class: "text-lg font-semibold" },
-    { name: "Paragraph", tag: "p", class: "text-base font-normal" },
+    { name: "Large Title", tag: "h1", class: "text-lg font-bold" },
+    { name: "Medium Title", tag: "h2", class: "text-base font-bold" },
+    { name: "Small Title", tag: "h3", class: "text-sm font-semibold" },
+    { name: "Subtitle", tag: "h4", class: "text-xs font-semibold" },
+    { name: "Body Text", tag: "p", class: "text-xs font-normal" },
   ];
 
   useEffect(() => {

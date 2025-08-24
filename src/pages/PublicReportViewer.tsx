@@ -25,6 +25,10 @@ import TopResellerSection from "../components/report/sections/TopResellerSection
 import FlashSaleSection from "../components/report/sections/FlashsaleSection";
 import BannerSection from "../components/report/sections/BannerSection";
 import DividerSection from "../components/report/sections/DividerSection";
+import CustomerPerformanceSection from "../components/report/sections/CustomerPerformanceSection";
+import ProductInsightsSection from "../components/report/sections/ProductInsightsSection";
+import SeasonalPatternsSection from "../components/report/sections/SeasonalPatternsSection";
+import GeographicIntelligenceSection from "../components/report/sections/GeographicIntelligenceSection";
 
 const PublicReportViewer = () => {
   const { token } = useParams();
@@ -192,6 +196,38 @@ const PublicReportViewer = () => {
             onUpdate={() => {}}
             period={report.period}
             client={clientName}
+          />
+        );
+      case "customer_performance":
+        return (
+          <CustomerPerformanceSection
+            section={currentPageData as any}
+            onUpdate={() => {}}
+            isEditable={false}
+          />
+        );
+      case "product_insights":
+        return (
+          <ProductInsightsSection
+            section={currentPageData as any}
+            onUpdate={() => {}}
+            isEditable={false}
+          />
+        );
+      case "seasonal_patterns":
+        return (
+          <SeasonalPatternsSection
+            section={currentPageData as any}
+            onUpdate={() => {}}
+            isEditable={false}
+          />
+        );
+      case "geographic_intelligence":
+        return (
+          <GeographicIntelligenceSection
+            section={currentPageData as any}
+            onUpdate={() => {}}
+            isEditable={false}
           />
         );
       default:
@@ -478,6 +514,30 @@ const PublicReportViewer = () => {
                         onUpdate={() => {}}
                         period={report.period}
                         client={clientName}
+                      />
+                    );
+                  case "customer_performance":
+                    return (
+                      <CustomerPerformanceSection
+                        section={section as any}
+                        onUpdate={() => {}}
+                        isEditable={false}
+                      />
+                    );
+                  case "product_insights":
+                    return (
+                      <ProductInsightsSection
+                        section={section as any}
+                        onUpdate={() => {}}
+                        isEditable={false}
+                      />
+                    );
+                  case "seasonal_patterns":
+                    return (
+                      <SeasonalPatternsSection
+                        section={section as any}
+                        onUpdate={() => {}}
+                        isEditable={false}
                       />
                     );
                   default:

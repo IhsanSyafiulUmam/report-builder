@@ -98,29 +98,42 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     const xKey = config.xKey || Object.keys(chartData[0] || {})[0];
     const yKey = config.yKey || Object.keys(chartData[0] || {})[1];
 
+    // For slide layout, ensure charts fit within fixed dimensions
+    const optimizedMargins = {
+      top: 10,
+      right: 20,
+      left: 40,
+      bottom: 30
+    };
+
     switch (config.type) {
       case "bar":
       case "sales-overview":
         return (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+            <BarChart data={chartData} margin={optimizedMargins}>
               {config.showGrid && <CartesianGrid strokeDasharray="3 3" />}
-              <XAxis dataKey={xKey} tick={{ fontSize: 12, fill: "#374151" }} />
-              <YAxis tick={{ fontSize: 8, fill: "#6b7280" }} />
+              <XAxis 
+                dataKey={xKey} 
+                tick={{ fontSize: 10, fill: "#374151" }}
+                angle={-45}
+                textAnchor="end"
+                height={60}
+                interval={0}
+              />
+              <YAxis 
+                tick={{ fontSize: 10, fill: "#6b7280" }}
+                width={50}
+              />
               {config.showTooltip && <Tooltip />}
-              {config.showLegend && <Legend />}
-              <Bar dataKey={yKey} radius={[4, 4, 0, 0]}>
+              {config.showLegend && <Legend wrapperStyle={{ fontSize: '12px' }} />}
+              <Bar dataKey={yKey} radius={[2, 2, 0, 0]}>
                 {chartData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={colors[index % colors.length]}
                   />
                 ))}
-                <LabelList
-                  dataKey={yKey}
-                  position="top"
-                  style={{ fontSize: 12, fontWeight: 600 }}
-                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>
@@ -128,18 +141,26 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
       case "line":
         return (
-          <ResponsiveContainer width="100%" height="100%">
-            <RechartsLineChart data={chartData}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+            <RechartsLineChart data={chartData} margin={optimizedMargins}>
               {config.showGrid && <CartesianGrid strokeDasharray="3 3" />}
-              <XAxis dataKey={xKey} tick={{ fontSize: 12, fill: "#374151" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
+              <XAxis 
+                dataKey={xKey} 
+                tick={{ fontSize: 10, fill: "#374151" }}
+                interval={0}
+              />
+              <YAxis 
+                tick={{ fontSize: 10, fill: "#6b7280" }}
+                width={50}
+              />
               {config.showTooltip && <Tooltip />}
-              {config.showLegend && <Legend />}
+              {config.showLegend && <Legend wrapperStyle={{ fontSize: '12px' }} />}
               <Line
                 type="monotone"
                 dataKey={yKey}
                 stroke={colors[0]}
                 strokeWidth={2}
+                dot={{ r: 3 }}
               />
             </RechartsLineChart>
           </ResponsiveContainer>
@@ -147,13 +168,20 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
       case "area":
         return (
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+            <AreaChart data={chartData} margin={optimizedMargins}>
               {config.showGrid && <CartesianGrid strokeDasharray="3 3" />}
-              <XAxis dataKey={xKey} tick={{ fontSize: 12, fill: "#374151" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
+              <XAxis 
+                dataKey={xKey} 
+                tick={{ fontSize: 10, fill: "#374151" }}
+                interval={0}
+              />
+              <YAxis 
+                tick={{ fontSize: 10, fill: "#6b7280" }}
+                width={50}
+              />
               {config.showTooltip && <Tooltip />}
-              {config.showLegend && <Legend />}
+              {config.showLegend && <Legend wrapperStyle={{ fontSize: '12px' }} />}
               <Area
                 type="monotone"
                 dataKey={yKey}
@@ -167,7 +195,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
       case "pie":
         return (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={200}>
             <RechartsPieChart>
               <Pie
                 data={chartData}
@@ -175,8 +203,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 nameKey={xKey}
                 cx="50%"
                 cy="50%"
-                outerRadius={80}
-                label
+                outerRadius={60}
+                innerRadius={0}
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                labelLine={false}
               >
                 {chartData.map((_, index) => (
                   <Cell
@@ -186,7 +216,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 ))}
               </Pie>
               {config.showTooltip && <Tooltip />}
-              {config.showLegend && <Legend />}
+              {config.showLegend && <Legend wrapperStyle={{ fontSize: '12px' }} />}
             </RechartsPieChart>
           </ResponsiveContainer>
         );
@@ -196,13 +226,23 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           (key) => key !== xKey
         );
         return (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+            <BarChart data={chartData} margin={optimizedMargins}>
               {config.showGrid && <CartesianGrid strokeDasharray="3 3" />}
-              <XAxis dataKey={xKey} tick={{ fontSize: 12, fill: "#374151" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
+              <XAxis 
+                dataKey={xKey} 
+                tick={{ fontSize: 10, fill: "#374151" }}
+                angle={-45}
+                textAnchor="end"
+                height={60}
+                interval={0}
+              />
+              <YAxis 
+                tick={{ fontSize: 10, fill: "#6b7280" }}
+                width={50}
+              />
               {config.showTooltip && <Tooltip />}
-              {config.showLegend && <Legend />}
+              {config.showLegend && <Legend wrapperStyle={{ fontSize: '12px' }} />}
               {dataKeys.map((key, index) => (
                 <Bar
                   key={key}
@@ -282,18 +322,25 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         // For custom renderers, give them full control over the container but with background
         <div
           className="overflow-hidden bg-white border border-gray-200 rounded-lg"
-          style={{ height: config.height || 350 }}
+          style={{ 
+            height: config.height || 320,
+            minHeight: 200,
+            maxHeight: 400
+          }}
         >
           {config.title && (
-            <div className="px-4 py-3 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900">
+            <div className="px-3 py-2 border-b border-gray-200">
+              <h3 className="text-xs font-medium text-gray-900 truncate">
                 {config.title}
               </h3>
             </div>
           )}
           <div
-            className="p-4 overflow-hidden"
-            style={{ height: config.title ? "calc(100% - 60px)" : "100%" }}
+            className="overflow-hidden"
+            style={{ 
+              height: config.title ? "calc(100% - 40px)" : "100%",
+              padding: '8px'
+            }}
           >
             {renderChart()}
           </div>
@@ -302,18 +349,25 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         // For standard charts, use the default container
         <div
           className="overflow-hidden bg-white border border-gray-200 rounded-lg"
-          style={{ height: config.height || 350 }}
+          style={{ 
+            height: config.height || 320,
+            minHeight: 200,
+            maxHeight: 400
+          }}
         >
           {config.title && (
-            <div className="px-4 py-3 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900">
+            <div className="px-3 py-2 border-b border-gray-200">
+              <h3 className="text-xs font-medium text-gray-900 truncate">
                 {config.title || chartTitle}
               </h3>
             </div>
           )}
           <div
-            className="p-4 overflow-hidden"
-            style={{ height: config.title ? "calc(100% - 60px)" : "100%" }}
+            className="overflow-hidden"
+            style={{ 
+              height: config.title ? "calc(100% - 40px)" : "100%",
+              padding: '8px'
+            }}
           >
             {renderChart()}
           </div>

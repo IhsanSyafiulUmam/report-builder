@@ -158,7 +158,7 @@ const TopBrandChannelSection: React.FC<TopBrandChannelProps> = ({
         </div>
 
         {/* Chart Container */}
-        <div className="relative p-4 border border-gray-100 shadow-sm bg-gradient-to-br from-gray-50/50 to-white rounded-2xl">
+        <div className="relative p-4 border border-gray-100 shadow-sm bg-white rounded-2xl">
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart

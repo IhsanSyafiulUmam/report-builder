@@ -41,7 +41,11 @@ export async function processSection(
   const mergedContent = {
     ...section.content,
     ...(newContent && typeof newContent === "object"
-      ? { chartData: newContent.chartData }
+      ? { 
+          chartData: newContent.chartData
+          // Note: No flattening for chart sections to avoid data duplication
+          // Components should access data via section.content.chartData
+        }
       : {}),
   };
 

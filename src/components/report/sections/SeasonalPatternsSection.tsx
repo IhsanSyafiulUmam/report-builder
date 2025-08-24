@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { QueryItem } from "../QueryEditor";
 import {
   LineChart,
   Line,
@@ -9,12 +8,16 @@ import {
   Tooltip,
   ReferenceLine,
 } from "recharts";
-import BaseSectionLayout from "../shared/BaseSectionLayout";
-import InsightManager from "../shared/InsightManager";
-import ActionTitle from "../shared/ActionTitle";
+import { BaseSectionLayout, InsightManager, ActionTitle } from "../shared";
 import ChartComponent from "../ChartComponent";
+import { QueryItem } from "../QueryEditor";
 
-interface PlatformSalesValueProps {
+interface ChartDataItem {
+  Month: string;
+  [key: string]: string | number;
+}
+
+interface SeasonalPatternsSectionProps {
   section: {
     id: string;
     title: string;
@@ -22,14 +25,14 @@ interface PlatformSalesValueProps {
       text: string;
       actionTitle?: string;
       subheadline?: string;
-      chartData: Array<Record<string, string | number>>;
+      chartData?: ChartDataItem[];
       insights?: Array<{ title: string; body: string }>;
       queries?: QueryItem[];
     };
   };
   onUpdate: (updates: {
     content: {
-      text?: string;
+      text: string;
       actionTitle?: string;
       subheadline?: string;
       insights?: Array<{ title: string; body: string }>;
@@ -40,33 +43,23 @@ interface PlatformSalesValueProps {
 }
 
 const colorPalette = [
-  "#f97316", // orange
-  "#000000", // black
-  "#22c55e", // green
-  "#d946ef", // purple
+  "#16a34a", // green
+  "#dc2626", // red
   "#2563eb", // blue
-  "#eab308", // yellow
-  "#db2777", // pink
-  "#64748b", // slate
+  "#ea580c", // orange
+  "#7c3aed", // purple
+  "#0891b2", // cyan
+  "#be185d", // pink
+  "#059669", // emerald
 ];
 
-const platformNames: Record<string, string> = {
-  Channel: "Channel",
-  Shopee: "Shopee",
-  TikTok: "TikTok",
-  Tokopedia: "Tokopedia",
-  "TikTok x Tokopedia": "TikTok x Tokopedia",
-};
-
-const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
+const SeasonalPatternsSection: React.FC<SeasonalPatternsSectionProps> = ({
   section,
   onUpdate,
   isEditable = false,
 }) => {
-  const queries = section.content.queries || [];
-  const insights = section.content.insights || [];
+  const { chartData = [], insights = [], queries = [] } = section.content;
   const [hoveredLine, setHoveredLine] = useState<string | null>(null);
-  const rawData = section.content.chartData || [];
 
   const handleQueryEditorChange = (newQueries: QueryItem[]) => {
     onUpdate({ content: { ...section.content, queries: newQueries } });
@@ -80,48 +73,13 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
     onUpdate({ content: { ...section.content, subheadline: newSubheadline } });
   };
 
-  const platformKeys =
-    rawData.length > 0
-      ? Object.keys(rawData[0]).filter((k) => k !== "Month" && k !== "month")
-      : [];
-
-  const colors: Record<string, string> = {};
-  platformKeys.forEach((key, idx) => {
-    colors[key] = colorPalette[idx % colorPalette.length];
-  });
-
-  const [selectedPlatforms, setSelectedPlatforms] =
-    useState<string[]>(platformKeys);
-
-  const platformData = rawData.map((row) => {
-    const out: Record<string, number | string> = {
-      month: row.Month || row.month,
-    };
-    platformKeys.forEach((key) => {
-      const val = row[key];
-      if (typeof val === "string" && val !== "-") {
-        out[key] = parseFloat(val.replace(" Bio", ""));
-      } else if (typeof val === "number") {
-        out[key] = val;
-      } else {
-        out[key] = 0;
-      }
-    });
-    return out;
-  });
-
-  const togglePlatform = (platform: string) => {
-    setSelectedPlatforms((prev) =>
-      prev.includes(platform)
-        ? prev.filter((p) => p !== platform)
-        : [...prev, platform]
-    );
-  };
-
   const handleAddInsight = () => {
     const newInsights = [
       ...insights,
-      { title: "New Insight", body: "Description" },
+      {
+        title: "Product Order Insight",
+        body: "Analysis of seasonal order patterns and product demand trends",
+      },
     ];
     onUpdate({ content: { ...section.content, insights: newInsights } });
   };
@@ -131,8 +89,9 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
     field: "title" | "body",
     value: string
   ) => {
-    const newInsights = [...insights];
-    newInsights[idx] = { ...newInsights[idx], [field]: value };
+    const newInsights = insights.map((ins, i) =>
+      i === idx ? { ...ins, [field]: value } : ins
+    );
     onUpdate({ content: { ...section.content, insights: newInsights } });
   };
 
@@ -141,130 +100,131 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
     onUpdate({ content: { ...section.content, insights: newInsights } });
   };
 
-  const renderPlatformChart = (data: Record<string, unknown>[]) => {
+  // Get product keys (exclude Month and month_sort)
+  const productKeys =
+    chartData.length > 0
+      ? Object.keys(chartData[0]).filter(
+          (k) => k !== "Month" && k !== "month_sort"
+        )
+      : [];
+
+  // Create color mapping for products
+  const colors: Record<string, string> = {};
+  productKeys.forEach((key, idx) => {
+    colors[key] = colorPalette[idx % colorPalette.length];
+  });
+
+  const [selectedProducts, setSelectedProducts] =
+    useState<string[]>(productKeys);
+
+  const toggleProduct = (product: string) => {
+    setSelectedProducts((prev) =>
+      prev.includes(product)
+        ? prev.filter((p) => p !== product)
+        : [...prev, product]
+    );
+  };
+
+  // Transform data for chart
+  const transformedData = chartData.map((item) => {
+    const result: Record<string, string | number> = {
+      Month: item.Month,
+    };
+
+    productKeys.forEach((product) => {
+      const value = item[product];
+      result[product] = typeof value === "number" ? value : 0;
+    });
+
+    return result;
+  });
+
+  const renderProductChart = (data: Record<string, unknown>[]) => {
     return (
       <div className="space-y-6">
-        {/* Platform Toggle Buttons */}
+        {/* Product Toggle Buttons */}
         <div className="flex flex-wrap items-center gap-2 pb-4">
           <div className="flex flex-wrap gap-1">
-            {platformKeys.map((key) => (
+            {productKeys.map((key) => (
               <button
                 key={key}
-                onClick={() => togglePlatform(key)}
+                onClick={() => toggleProduct(key)}
                 onMouseEnter={() => setHoveredLine(key)}
                 onMouseLeave={() => setHoveredLine(null)}
-                className={`flex items-center gap-2 px-4 py-1 rounded-full text-xs font-semibold transition-all duration-300 ${
-                  selectedPlatforms.includes(key)
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ${
+                  selectedProducts.includes(key)
                     ? "bg-white text-gray-800 shadow-lg shadow-gray-200/50 border border-gray-200"
                     : "bg-gray-50 text-gray-500 hover:bg-gray-100"
                 } hover:shadow-xl transform hover:-translate-y-0.5`}
               >
                 <div
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    selectedPlatforms.includes(key) ? "shadow-lg" : "opacity-60"
+                    selectedProducts.includes(key) ? "shadow-lg" : "opacity-60"
                   }`}
                   style={{
                     backgroundColor: colors[key],
-                    boxShadow: selectedPlatforms.includes(key)
+                    boxShadow: selectedProducts.includes(key)
                       ? `0 0 0 2px ${colors[key]}20`
                       : "none",
                   }}
                 />
-                <span className="font-medium">{platformNames[key] || key}</span>
+                <span
+                  className="font-medium truncate max-w-[120px]"
+                  title={key}
+                >
+                  {key.length > 15 ? `${key.substring(0, 15)}...` : key}
+                </span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Chart Container with modern styling */}
-        <div className="relative p-4 border border-gray-100 shadow-sm bg-white rounded-2xl">
-          <div className="h-52">
+        {/* Chart Container */}
+        <div className="relative p-4 bg-white border border-gray-100 shadow-sm rounded-2xl">
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={data}
-                margin={{ top: 10, right: 5, left: 5, bottom: 5 }}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
               >
-                {/* Gradient definitions */}
-                <defs>
-                  {platformKeys.map((key) => (
-                    <linearGradient
-                      key={`gradient-${key}`}
-                      id={`gradient-${key}`}
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="0%"
-                        stopColor={colors[key]}
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="100%"
-                        stopColor={colors[key]}
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  ))}
-                </defs>
-
                 <XAxis
-                  dataKey="month"
+                  dataKey="Month"
                   axisLine={false}
                   tickLine={false}
                   tick={{
-                    fontSize: 8,
+                    fontSize: 11,
                     fill: "#64748b",
                     fontWeight: 500,
-                    fontFamily: "Helvetica, Helvetica Neue, Arial, sans-serif",
                   }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
                   dy={10}
-                  className="text-slate-600"
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
                   tick={{
-                    fontSize: 8,
+                    fontSize: 11,
                     fill: "#64748b",
                     fontWeight: 500,
-                    fontFamily: "Helvetica, Helvetica Neue, Arial, sans-serif",
                   }}
-                  tickFormatter={(value) => `${value} Bio`}
-                  width={40}
-                  className="text-slate-600"
+                  tickFormatter={(value) => `${Math.round(value)}`}
+                  width={50}
                 />
-
-                {/* Custom grid lines */}
-                <defs>
-                  <pattern
-                    id="grid"
-                    width="1"
-                    height="1"
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <path
-                      d="M 1 0 L 0 0 0 1"
-                      fill="none"
-                      stroke="#f1f5f9"
-                      strokeWidth="1"
-                    />
-                  </pattern>
-                </defs>
 
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl p-4 min-w-[100px]">
-                          <p className="pb-1 mb-2 text-xs font-semibold text-gray-800 border-b border-gray-100">
+                        <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl shadow-xl p-4 min-w-[200px]">
+                          <p className="pb-1 mb-2 text-sm font-semibold text-gray-800 border-b border-gray-100">
                             {label}
                           </p>
                           <div className="space-y-2">
                             {payload
                               .filter((entry) =>
-                                selectedPlatforms.includes(
+                                selectedProducts.includes(
                                   entry.dataKey as string
                                 )
                               )
@@ -275,16 +235,18 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
                                 >
                                   <div className="flex items-center gap-2">
                                     <div
-                                      className="w-1 h-1 rounded-full shadow-sm"
+                                      className="w-2 h-2 rounded-full shadow-sm"
                                       style={{ backgroundColor: entry.color }}
                                     />
-                                    <span className="text-xs font-medium text-gray-700">
-                                      {platformNames[entry.dataKey as string] ||
-                                        entry.dataKey}
+                                    <span
+                                      className="text-xs font-medium text-gray-700 truncate max-w-[120px]"
+                                      title={entry.dataKey as string}
+                                    >
+                                      {entry.dataKey as string}
                                     </span>
                                   </div>
                                   <span className="text-xs font-bold text-gray-900">
-                                    {entry.value} Bio
+                                    {Math.round(Number(entry.value))} orders
                                   </span>
                                 </div>
                               ))}
@@ -303,9 +265,9 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
                   strokeOpacity={0.6}
                 />
 
-                {platformKeys.map((key) => {
+                {productKeys.map((key) => {
                   const color = colors[key];
-                  const isSelected = selectedPlatforms.includes(key);
+                  const isSelected = selectedProducts.includes(key);
                   const isHovered = hoveredLine === key;
 
                   return (
@@ -321,19 +283,13 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
                         stroke: "#ffffff",
                         strokeWidth: 2,
                         r: isSelected ? 4 : 0,
-                        className: "drop-shadow-sm",
                       }}
                       activeDot={{
                         r: 6,
                         fill: color,
                         stroke: "#ffffff",
-                        strokeWidth: 1,
-                        className: "drop-shadow-lg",
-                        style: {
-                          filter: `drop-shadow(0 2px 4px ${color}40)`,
-                        },
+                        strokeWidth: 2,
                       }}
-                      strokeDasharray={isHovered ? "0" : "0"}
                       className="transition-all duration-300"
                     />
                   );
@@ -341,9 +297,6 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
               </LineChart>
             </ResponsiveContainer>
           </div>
-
-          {/* Modern background pattern */}
-          <div className="absolute inset-0 pointer-events-none bg-gray-50/20 rounded-2xl" />
         </div>
       </div>
     );
@@ -355,12 +308,13 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
       isEditable={isEditable}
       onQueryChange={handleQueryEditorChange}
       channels={[]}
+      showFooter={true}
     >
       {/* Action Title */}
       <div className="mb-8 group">
         <ActionTitle
-          title={section.content.actionTitle || "Platform Sales Performance"}
-          subheadline={section.content.subheadline || ""}
+          title={section.content.actionTitle || "Product Order Trends"}
+          subheadline={section.content.subheadline}
           isEditable={isEditable}
           onEditTitle={handleActionTitleChange}
           onEditSubheadline={handleSubheadlineChange}
@@ -368,28 +322,28 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
       </div>
 
       <div className="flex flex-col gap-8 lg:grid lg:grid-cols-5">
-        {/* Chart Section */}
-        <div className="overflow-hidden lg:col-span-3">
+        {/* Chart */}
+        <div className="lg:col-span-3">
           <ChartComponent
             config={{
               type: "line",
-              data: platformData,
-              title: "Platform Sales Performance",
+              data: transformedData,
+              title: "Monthly Product Order Patterns",
               width: 800,
-              height: 360,
-              xKey: "month",
-              yKey: platformKeys[0],
+              height: 400,
+              xKey: "Month",
+              yKey: productKeys[0] || "value",
               colors: Object.values(colors),
               showGrid: true,
               showTooltip: true,
               showLegend: false,
-              customRenderer: renderPlatformChart,
+              customRenderer: renderProductChart,
             }}
             isEditable={false}
           />
         </div>
 
-        {/* Insights Section */}
+        {/* Insight */}
         <div className="lg:col-span-2">
           <InsightManager
             insights={insights}
@@ -404,4 +358,4 @@ const PlatformSalesValueSection: React.FC<PlatformSalesValueProps> = ({
   );
 };
 
-export default PlatformSalesValueSection;
+export default SeasonalPatternsSection;

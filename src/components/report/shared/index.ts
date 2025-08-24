@@ -5,7 +5,7 @@ export { default as SectionLayout } from "./SectionLayout";
 export { default as CustomTooltip } from "./CustomTooltip";
 export { default as SectionHeader } from "./SectionHeader";
 export { default as BaseSectionLayout } from "./BaseSectionLayout";
-export { default as StandardChartSection } from "./StandardChartSection";
 export { default as ActionTitle } from "./ActionTitle";
 export { default as ReportSection } from "../ReportSection";
 export { default as ResizableWrapper } from "./ResizableWrapper";
+

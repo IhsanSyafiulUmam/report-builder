@@ -125,7 +125,7 @@ const TopCategoriesSection: React.FC<TopCategoriesSectionProps> = ({
     return (
       <div className="flex items-center">
         <div
-          className="h-4 rounded-sm bg-gradient-to-r from-red-600 to-red-700"
+          className="h-4 rounded-sm bg-red-600"
           style={{ width: `${percentage}%`, minWidth: "20px" }}
         />
         <span className="ml-2 text-sm font-normal text-red-600">{value}</span>

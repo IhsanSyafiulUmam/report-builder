@@ -15,6 +15,10 @@ import FlashSaleSection from "./sections/FlashsaleSection";
 import BannerSection from "./sections/BannerSection";
 import DividerSection from "./sections/DividerSection";
 import TopBrandChannelSection from "./sections/TopBrandChannelSection";
+import CustomerPerformanceSection from "./sections/CustomerPerformanceSection";
+import ProductInsightsSection from "./sections/ProductInsightsSection";
+import SeasonalPatternsSection from "./sections/SeasonalPatternsSection";
+import GeographicIntelligenceSection from "./sections/GeographicIntelligenceSection";
 
 interface ChartConfig {
   type: string;
@@ -165,6 +169,38 @@ const ReportSection: React.FC<ReportSectionProps> = ({
       case "top_brand_channel":
         return (
           <TopBrandChannelSection
+            section={section as any}
+            onUpdate={onUpdate as any}
+            isEditable={true}
+          />
+        );
+      case "customer_performance":
+        return (
+          <CustomerPerformanceSection
+            section={section as any}
+            onUpdate={onUpdate as any}
+            isEditable={true}
+          />
+        );
+      case "product_insights":
+        return (
+          <ProductInsightsSection
+            section={section as any}
+            onUpdate={onUpdate as any}
+            isEditable={true}
+          />
+        );
+      case "seasonal_patterns":
+        return (
+          <SeasonalPatternsSection
+            section={section as any}
+            onUpdate={onUpdate as any}
+            isEditable={true}
+          />
+        );
+      case "geographic_intelligence":
+        return (
+          <GeographicIntelligenceSection
             section={section as any}
             onUpdate={onUpdate as any}
             isEditable={true}

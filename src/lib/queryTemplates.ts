@@ -335,4 +335,139 @@ export const queryTemplates = {
       `,
     },
   ],
+
+  // NEW CSV-BASED SECTIONS
+  customer_performance: [
+    {
+      id: "top_customers",
+      query: `
+        SELECT
+          NamaPelanggan AS customer_name,
+            SUM(Penjualan) AS total_sales
+          FROM
+            biqquery-468807.staging.sales
+          WHERE
+            DATE(Tanggal) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+          GROUP BY
+            NamaPelanggan
+          ORDER BY
+            total_sales DESC
+          LIMIT
+            10
+      `,
+    },
+  ],
+
+  product_insights: [
+    {
+      id: "top_products",
+      query: `
+        SELECT
+          NamaBarang as product_name,
+          SUM(Penjualan) as total_revenue
+        FROM \`biqquery-468807.staging.sales\`
+        WHERE DATE(Tanggal) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+        GROUP BY NamaBarang
+        ORDER BY total_revenue DESC
+        LIMIT 10
+      `,
+    },
+  ],
+
+  seasonal_patterns: [
+    {
+      id: "monthly_top_products",
+      query: `
+        WITH monthly_product_orders AS (
+          SELECT
+            FORMAT_DATE('%b %Y', DATE(Tanggal)) AS month,
+            FORMAT_DATE('%Y-%m', DATE(Tanggal)) AS month_sort,
+            NamaBarang as product_name,
+            COUNT(DISTINCT INV) as order_count,
+            SUM(Penjualan) as product_sales
+          FROM \`biqquery-468807.staging.sales\`
+          WHERE DATE(Tanggal) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+          GROUP BY month, month_sort, product_name
+        ),
+        top_products AS (
+          SELECT 
+            product_name,
+            SUM(order_count) as total_orders
+          FROM monthly_product_orders
+          GROUP BY product_name
+          ORDER BY total_orders DESC
+          LIMIT 5
+        ),
+        product_monthly_data AS (
+          SELECT 
+            mpo.month,
+            mpo.month_sort,
+            mpo.product_name,
+            mpo.order_count
+          FROM monthly_product_orders mpo
+          INNER JOIN top_products tp ON mpo.product_name = tp.product_name
+        )
+        SELECT 
+          month,
+          month_sort,
+          product_name,
+          order_count
+        FROM product_monthly_data
+        ORDER BY month_sort, product_name
+      `,
+    },
+  ],
+
+  geographic_intelligence: [
+    {
+      id: "top_locations",
+      query: `
+        WITH location_data AS (
+          SELECT
+            Lokasi as Location,
+            CONCAT('Rp ', ROUND(SUM(Penjualan) / 1000000, 1), 'M') as Total_Sales
+          FROM \`biqquery-468807.staging.sales\`
+          GROUP BY Lokasi
+          ORDER BY SUM(Penjualan) DESC
+          LIMIT 10
+        )
+        SELECT * FROM location_data
+      `,
+    },
+  ],
+
+  payment_terms: [
+    {
+      id: "payment_analysis",
+      query: `
+        SELECT
+          Termin as payment_term,
+          KategoriPelanggan as customer_category,
+          COUNT(DISTINCT INV) as order_count,
+          SUM(Penjualan) as total_sales,
+          AVG(Penjualan) as avg_order_value,
+          COUNT(DISTINCT KodePelanggan) as unique_customers,
+          SUM(Kuantitas) as total_quantity
+        FROM \`biqquery-468807.staging.sales\`
+        WHERE DATE(Tanggal) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+        GROUP BY Termin, KategoriPelanggan
+        ORDER BY total_sales DESC
+      `,
+    },
+    {
+      id: "payment_trends",
+      query: `
+        SELECT
+          Termin as payment_term,
+          FORMAT_DATE('%Y-%m', DATE(Tanggal)) as month,
+          SUM(Penjualan) as monthly_sales,
+          AVG(Penjualan) as avg_order_value,
+          COUNT(DISTINCT INV) as order_count
+        FROM \`biqquery-468807.staging.sales\`
+        WHERE DATE(Tanggal) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+        GROUP BY Termin, month
+        ORDER BY payment_term, month
+      `,
+    },
+  ],
 };

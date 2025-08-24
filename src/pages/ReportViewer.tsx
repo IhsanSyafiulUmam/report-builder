@@ -39,6 +39,10 @@ import FlashSaleSection from "../components/report/sections/FlashsaleSection";
 import BannerSection from "../components/report/sections/BannerSection";
 import DividerSection from "../components/report/sections/DividerSection";
 import TopBrandChannelSection from "../components/report/sections/TopBrandChannelSection";
+import CustomerPerformanceSection from "../components/report/sections/CustomerPerformanceSection";
+import ProductInsightsSection from "../components/report/sections/ProductInsightsSection";
+import SeasonalPatternsSection from "../components/report/sections/SeasonalPatternsSection";
+import GeographicIntelligenceSection from "../components/report/sections/GeographicIntelligenceSection";
 
 const ReportViewer = () => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -314,6 +318,39 @@ const ReportViewer = () => {
             onUpdate={dummyUpdate}
             period={report.period}
             client={clientName}
+          />
+        );
+
+      case "customer_performance":
+        return (
+          <CustomerPerformanceSection
+            section={currentPageData}
+            onUpdate={dummyUpdate}
+            isEditable={false}
+          />
+        );
+      case "product_insights":
+        return (
+          <ProductInsightsSection
+            section={currentPageData as any}
+            onUpdate={dummyUpdate}
+            isEditable={false}
+          />
+        );
+      case "seasonal_patterns":
+        return (
+          <SeasonalPatternsSection
+            section={currentPageData as any}
+            onUpdate={dummyUpdate}
+            isEditable={false}
+          />
+        );
+      case "geographic_intelligence":
+        return (
+          <GeographicIntelligenceSection
+            section={currentPageData as any}
+            onUpdate={dummyUpdate}
+            isEditable={false}
           />
         );
 
@@ -672,6 +709,38 @@ const ReportViewer = () => {
                             onUpdate={dummyUpdate}
                             period={report.period}
                             client={clientName}
+                          />
+                        );
+                      case "customer_performance":
+                        return (
+                          <CustomerPerformanceSection
+                            section={section as any}
+                            onUpdate={dummyUpdate}
+                            isEditable={false}
+                          />
+                        );
+                      case "product_insights":
+                        return (
+                          <ProductInsightsSection
+                            section={section as any}
+                            onUpdate={dummyUpdate}
+                            isEditable={false}
+                          />
+                        );
+                      case "seasonal_patterns":
+                        return (
+                          <SeasonalPatternsSection
+                            section={section as any}
+                            onUpdate={dummyUpdate}
+                            isEditable={false}
+                          />
+                        );
+                      case "geographic_intelligence":
+                        return (
+                          <GeographicIntelligenceSection
+                            section={section as any}
+                            onUpdate={dummyUpdate}
+                            isEditable={false}
                           />
                         );
                       default:

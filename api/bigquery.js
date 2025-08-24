@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 
 const bigquery = new BigQuery({
   keyFilename: path.join(__dirname, "../service-account.json"),
-  projectId: "markethac",
+  projectId: "biqquery-468807",
 });
 
 app.post("/api/bigquery", async (req, res) => {

@@ -49,13 +49,13 @@ const ActionTitle: React.FC<ActionTitleProps> = ({
     { name: "Black", value: "#000000", class: "text-black" },
   ];
 
-  // Font size options
+  // Font size options - optimized for slide layout
   const fontSizes = [
-    { name: "Heading 1", tag: "h1", class: "text-3xl font-bold" },
-    { name: "Heading 2", tag: "h2", class: "text-2xl font-bold" },
-    { name: "Heading 3", tag: "h3", class: "text-xl font-semibold" },
-    { name: "Heading 4", tag: "h4", class: "text-lg font-semibold" },
-    { name: "Paragraph", tag: "p", class: "text-base font-normal" },
+    { name: "Large Title", tag: "h1", class: "text-xl font-bold" },
+    { name: "Medium Title", tag: "h2", class: "text-lg font-bold" },
+    { name: "Small Title", tag: "h3", class: "text-base font-semibold" },
+    { name: "Subtitle", tag: "h4", class: "text-sm font-semibold" },
+    { name: "Body Text", tag: "p", class: "text-sm font-normal" },
   ];
 
   useEffect(() => {
@@ -290,14 +290,14 @@ const ActionTitle: React.FC<ActionTitleProps> = ({
               ref={titleRef}
               contentEditable
               suppressContentEditableWarning={true}
-              className="text-2xl font-bold text-blue-700 bg-transparent border-b-2 border-blue-300 focus:border-blue-500 focus:outline-none flex-1 min-h-[2rem]"
+              className="text-lg font-bold text-blue-700 bg-transparent border-b-2 border-blue-300 focus:border-blue-500 focus:outline-none flex-1 min-h-[1.5rem]"
               style={{
-                fontSize: "24px",
+                fontSize: "18px",
                 fontWeight: "700",
                 color: "#1d4ed8",
                 backgroundColor: "transparent",
                 borderBottom: "2px solid #93c5fd",
-                minHeight: "2rem",
+                minHeight: "1.5rem",
                 lineHeight: "1.3",
               }}
               onKeyDown={(e) => {
@@ -327,9 +327,9 @@ const ActionTitle: React.FC<ActionTitleProps> = ({
         ) : (
           <div className="flex items-center flex-1 gap-2">
             <h1
-              className="text-2xl font-bold text-blue-700"
+              className="text-lg font-bold text-blue-700"
               style={{
-                fontSize: "24px",
+                fontSize: "18px",
                 fontWeight: "700",
                 color: "#1d4ed8",
                 lineHeight: "1.3",
@@ -357,14 +357,14 @@ const ActionTitle: React.FC<ActionTitleProps> = ({
                 ref={subheadlineRef}
                 contentEditable
                 suppressContentEditableWarning={true}
-                className="text-lg font-medium text-blue-600 bg-transparent border-b-2 border-blue-300 focus:border-blue-500 focus:outline-none flex-1 min-h-[1.5rem]"
+                className="text-sm font-medium text-blue-600 bg-transparent border-b-2 border-blue-300 focus:border-blue-500 focus:outline-none flex-1 min-h-[1.25rem]"
                 style={{
-                  fontSize: "18px",
+                  fontSize: "14px",
                   fontWeight: "500",
                   color: "#2563eb",
                   backgroundColor: "transparent",
                   borderBottom: "2px solid #93c5fd",
-                  minHeight: "1.5rem",
+                  minHeight: "1.25rem",
                   lineHeight: "1.4",
                 }}
                 onKeyDown={(e) => {
@@ -399,9 +399,9 @@ const ActionTitle: React.FC<ActionTitleProps> = ({
             <div className="flex items-center flex-1 gap-2">
               {subheadline ? (
                 <h2
-                  className="text-lg font-medium text-blue-600"
+                  className="text-sm font-medium text-blue-600"
                   style={{
-                    fontSize: "18px",
+                    fontSize: "14px",
                     fontWeight: "500",
                     color: "#2563eb",
                     lineHeight: "1.4",
@@ -411,7 +411,7 @@ const ActionTitle: React.FC<ActionTitleProps> = ({
               ) : isEditable && onEditSubheadline ? (
                 <button
                   onClick={startEditingSubheadline}
-                  className="text-lg font-medium text-gray-400 transition-colors hover:text-blue-600"
+                  className="text-sm font-medium text-gray-400 transition-colors hover:text-blue-600"
                 >
                   + Add subheadline
                 </button>
