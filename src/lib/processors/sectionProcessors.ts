@@ -7,6 +7,7 @@ export { default as top_categories } from "./sectionProcessors/top_categories";
 export { default as store_sales_value } from "./sectionProcessors/store_sales_value";
 export { default as volume_sales_value } from "./sectionProcessors/volume_sales_value";
 export { default as top_reseller } from "./sectionProcessors/top_reseller";
+export { default as top_brand_channel } from "./sectionProcessors/top_brand_channel";
 
 // NEW CSV-BASED SECTION PROCESSORS
 export { default as customer_performance } from "./sectionProcessors/customer_performance";

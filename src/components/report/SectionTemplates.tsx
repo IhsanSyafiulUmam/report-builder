@@ -125,7 +125,7 @@ const SectionTemplates: React.FC<SectionTemplatesProps> = ({
     {
       type: "top_brand_channel",
       title: "Top Brand on Each Channel",
-      description: "Brand performance analysis across different channels",
+      description: "Top Brand on Each Channel",
       icon: BarChart3,
       color: "green",
     },

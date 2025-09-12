@@ -323,23 +323,59 @@ export const queryTemplates = {
   ],
   top_brand_channel: [
     {
-      id: "top_brand_by_channel",
+      id: "top_brand_channel",
+      database: "clickhouse",
       query: `
+        WITH MonthlySales AS (
+            SELECT
+                Channel,
+                Brand,
+                toStartOfMonth(toDate(ScrapDate)) AS month,
+                SUM(DailySalesValue) AS GMV
+            FROM CosmicArchive.dm_AryaNoble
+            WHERE
+                toDate(ScrapDate) >= toStartOfMonth(subtractMonths(today(), 2))
+                AND toDate(ScrapDate) <= toLastDayOfMonth(subtractMonths(today(), 1))
+                AND L3Title = 'Shampoo'
+                AND Brand != 'No Brand'
+            GROUP BY
+                Channel, Brand, month
+        ),
+        Ranked AS (
+            SELECT
+                Channel,
+                Brand,
+                month,
+                GMV,
+                lagInFrame(GMV) OVER (
+                    PARTITION BY Channel, Brand ORDER BY month
+                    ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING
+                ) AS prev_GMV
+            FROM MonthlySales
+        ),
+        LatestMonth AS (
+            SELECT max(month) AS last_month FROM MonthlySales
+        )
         SELECT
-          Channel,
-          Brand,
-          SUM(DailySalesValue) AS Value,
-          ROUND(SUM(DailySalesValue) / SUM(SUM(DailySalesValue)) OVER (PARTITION BY Channel) * 100, 2) AS Percentage
-        FROM
-          markethac.AryaNoble.dm_AryaNoble
-        WHERE
-          DATE(ScrapDate) BETWEEN DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH), MONTH)
-          AND LAST_DAY(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
-        GROUP BY
-          Channel, Brand
-        QUALIFY ROW_NUMBER() OVER (PARTITION BY Channel ORDER BY SUM(DailySalesValue) DESC) <= 10
-        ORDER BY
-          Channel, SUM(DailySalesValue) DESC
+            Channel,
+            Brand,
+            GMV,
+            round(((GMV - prev_GMV) / prev_GMV) * 100, 2) AS MonthlyGrowthPct
+        FROM (
+            SELECT
+                r.Channel,
+                r.Brand,
+                r.GMV,
+                r.prev_GMV,
+                ROW_NUMBER() OVER (
+                    PARTITION BY r.Channel
+                    ORDER BY r.GMV DESC
+                ) AS rank_num
+            FROM Ranked r
+            INNER JOIN LatestMonth lm ON r.month = lm.last_month
+        )
+        WHERE rank_num <= 3
+        ORDER BY Channel, rank_num
       `,
     },
   ],

@@ -1,10 +1,10 @@
 export default function processGeographicIntelligence(results: unknown) {
   // Handle data from both BigQuery and ClickHouse
-  const resultsObj = results as { 
-    top_locations?: unknown[]; 
+  const resultsObj = results as {
+    top_locations?: unknown[];
     top_locations_ch?: unknown[]; // Add ClickHouse support
   };
-  
+
   // Try BigQuery data first, then ClickHouse, then fallback
   const rawData = Array.isArray(results)
     ? results

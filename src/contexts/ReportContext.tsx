@@ -96,6 +96,7 @@ interface ReportContextType {
   }>;
   updateReport: (id: string, updates: Partial<Report>) => Promise<void>;
   deleteReport: (id: string) => Promise<void>;
+  duplicateReport: (id: string) => Promise<Report>;
   getReport: (id: string) => Report | undefined;
   loading: boolean;
   fetchReports: () => Promise<void>;
@@ -183,7 +184,7 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
             period: report.period,
             brand_filter: report.brand_filter,
             sections: report.sections,
-            database_source: "clickhouse", 
+            database_source: "clickhouse",
           })
           .select()
           .single();
@@ -224,7 +225,7 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
             status: updates.status,
             sections: updates.sections,
             folder_id: updates.folder_id,
-            brand_filter: updates.brand_filter ,
+            brand_filter: updates.brand_filter,
             period: updates.period,
             database_source: updates.database_source,
           })
@@ -275,6 +276,58 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  const duplicateReport = useCallback(
+    async (id: string): Promise<Report> => {
+      try {
+        const originalReport = reports.find((r) => r.id === id);
+        if (!originalReport) {
+          throw new Error("Report not found");
+        }
+
+        // Create a copy of the report with a new title and sections with new IDs
+        const duplicatedSections = originalReport.sections.map((section) => ({
+          ...section,
+          id: crypto.randomUUID(), // Generate new ID for the section
+        }));
+
+        const { data, error } = await supabase
+          .from("reports")
+          .insert({
+            title: `${originalReport.title} (Copy)`,
+            client_id: originalReport.client_id,
+            status: "draft", // Set duplicated report as draft
+            period: originalReport.period,
+            brand_filter: originalReport.brand_filter,
+            database_source: originalReport.database_source || "clickhouse",
+            sections: duplicatedSections,
+          })
+          .select()
+          .single();
+
+        if (error) {
+          console.error("Supabase error:", error);
+          throw error;
+        }
+
+        console.log("Duplicated report data:", data);
+
+        const { created_at, updated_at, ...rest } = data;
+        const formattedReport = {
+          ...rest,
+          createdAt: new Date(created_at).toISOString(),
+          updatedAt: new Date(updated_at).toISOString(),
+        };
+
+        setReports((prev) => [formattedReport, ...prev]);
+        return formattedReport;
+      } catch (error) {
+        console.error("Error duplicating report:", error);
+        throw error;
+      }
+    },
+    [reports]
+  );
+
   const getReport = useCallback(
     (id: string) => {
       return reports.find((report) => report.id === id);
@@ -289,6 +342,7 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
         addReport,
         updateReport,
         deleteReport,
+        duplicateReport,
         getReport,
         loading,
         fetchReports,

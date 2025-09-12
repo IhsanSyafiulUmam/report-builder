@@ -55,7 +55,7 @@ const EditableFooter: React.FC<EditableFooterProps> = ({
             <span>{footer.channel || "All Channels"}</span>
           </div>
         </div>
-        
+
         {isEditable && (
           <button
             onClick={handleEdit}
@@ -77,34 +77,40 @@ const EditableFooter: React.FC<EditableFooterProps> = ({
           <input
             type="text"
             value={editValues.dataSource || ""}
-            onChange={(e) => setEditValues(prev => ({ ...prev, dataSource: e.target.value }))}
+            onChange={(e) =>
+              setEditValues((prev) => ({ ...prev, dataSource: e.target.value }))
+            }
             placeholder="Data Source (e.g., BigQuery, Internal DB)"
             className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Calendar size={14} className="text-gray-400" />
           <input
             type="text"
             value={editValues.period || ""}
-            onChange={(e) => setEditValues(prev => ({ ...prev, period: e.target.value }))}
+            onChange={(e) =>
+              setEditValues((prev) => ({ ...prev, period: e.target.value }))
+            }
             placeholder="Period (e.g., Jan 2024 - Dec 2024)"
             className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Radio size={14} className="text-gray-400" />
           <input
             type="text"
             value={editValues.channel || ""}
-            onChange={(e) => setEditValues(prev => ({ ...prev, channel: e.target.value }))}
+            onChange={(e) =>
+              setEditValues((prev) => ({ ...prev, channel: e.target.value }))
+            }
             placeholder="Channel (e.g., All Channels, Online, Offline)"
             className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
-        
+
         <div className="flex items-center justify-end gap-2 pt-2">
           <button
             onClick={handleCancel}

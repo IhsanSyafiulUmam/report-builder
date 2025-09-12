@@ -24,8 +24,14 @@ import { useFolders } from "../contexts/FolderContext";
 import { useClients } from "../contexts/ClientContext";
 
 const ReportsPage = () => {
-  const { reports, loading, deleteReport, fetchReports, updateReport } =
-    useReports();
+  const {
+    reports,
+    loading,
+    deleteReport,
+    fetchReports,
+    updateReport,
+    duplicateReport,
+  } = useReports();
   const [optimisticReports, setOptimisticReports] = useState(null);
   const {
     folders,
@@ -137,6 +143,16 @@ const ReportsPage = () => {
         console.error("Error deleting report:", error);
         alert("Failed to delete report. Please try again.");
       }
+    }
+  };
+
+  const handleDuplicate = async (id: string) => {
+    try {
+      const duplicatedReport = await duplicateReport(id);
+      alert(`Report duplicated successfully as "${duplicatedReport.title}"`);
+    } catch (error) {
+      console.error("Error duplicating report:", error);
+      alert("Failed to duplicate report. Please try again.");
     }
   };
 
@@ -268,7 +284,7 @@ const ReportsPage = () => {
                         title="Share Folder"
                         onClick={async () => {
                           let token = folder.public_token;
-                          
+
                           if (!token) {
                             console.log("[DEBUG] Generating new token");
                             token = crypto.randomUUID();
@@ -339,6 +355,13 @@ const ReportsPage = () => {
                                   >
                                     <Edit3 size={16} />
                                   </Link>
+                                  <button
+                                    onClick={() => handleDuplicate(report.id)}
+                                    className="p-1 text-gray-400 hover:text-purple-600"
+                                    title="Duplicate"
+                                  >
+                                    <Copy size={16} />
+                                  </button>
                                   <button
                                     onClick={() =>
                                       moveReportToFolder(report.id, null)
@@ -428,6 +451,13 @@ const ReportsPage = () => {
                                 >
                                   <Edit3 size={16} />
                                 </Link>
+                                <button
+                                  onClick={() => handleDuplicate(report.id)}
+                                  className="p-1 text-gray-400 hover:text-purple-600"
+                                  title="Duplicate"
+                                >
+                                  <Copy size={16} />
+                                </button>
                                 <button
                                   onClick={() => handleDelete(report.id)}
                                   className="p-1 text-gray-400 hover:text-red-600"
@@ -620,7 +650,7 @@ const ReportsPage = () => {
                     "No Client"}
                 </span>
               </div>
-             
+
               {/* Actions bar */}
               <div className="flex items-center justify-between pt-4 mt-auto border-t border-gray-100">
                 <div className="flex items-center gap-2">
@@ -639,8 +669,9 @@ const ReportsPage = () => {
                     <Edit3 size={16} />
                   </Link>
                   <button
+                    onClick={() => handleDuplicate(report.id)}
                     className="p-2 text-gray-400 transition-colors rounded-full hover:text-purple-600 hover:bg-purple-50"
-                    title="Copy"
+                    title="Duplicate"
                   >
                     <Copy size={16} />
                   </button>

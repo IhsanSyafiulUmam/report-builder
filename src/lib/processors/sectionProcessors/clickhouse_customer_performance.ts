@@ -1,5 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function processClickhouseCustomerPerformance(results: Record<string, unknown>, _meta: unknown) {
+export default function processClickhouseCustomerPerformance(
+  results: Record<string, unknown>,
+  _meta: unknown
+) {
   const inputData = Array.isArray(results)
     ? results
     : Array.isArray(results?.top_customers_ch)

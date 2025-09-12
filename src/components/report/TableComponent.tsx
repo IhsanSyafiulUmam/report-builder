@@ -145,10 +145,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
       )}
 
       {/* Table Preview */}
-      <div
-        className="overflow-hidden bg-white border border-gray-200 rounded-lg"
-        style={{ height: isEditable ? "auto" : config.height || 400 }}
-      >
+      <div className="overflow-hidden bg-white border border-gray-200 rounded-lg">
         {config.showHeader !== false && (
           <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
             <h3 className="text-sm font-medium text-gray-900">
@@ -158,7 +155,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
         )}
         <div
           className="overflow-auto"
-          style={{ maxHeight: isEditable ? 400 : "100%" }}
+          style={{
+            maxHeight: isEditable ? "400px" : "400px",
+            minHeight: "200px",
+          }}
         >
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">

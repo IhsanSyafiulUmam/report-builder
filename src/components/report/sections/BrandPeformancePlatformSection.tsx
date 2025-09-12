@@ -67,10 +67,7 @@ const BrandPerformancePlatformSection: React.FC<
         <div className="mb-8 group">
           <ActionTitle
             title={section.content.actionTitle || "Platform Sales Performance"}
-            subheadline={
-              section.content.subheadline ||
-              ""
-            }
+            subheadline={section.content.subheadline || ""}
             isEditable={isEditable}
             onEditTitle={handleActionTitleChange}
             onEditSubheadline={handleSubheadlineChange}
@@ -90,9 +87,12 @@ const BrandPerformancePlatformSection: React.FC<
           </p>
         )}
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full overflow-hidden text-sm text-left text-gray-700 bg-white border shadow-sm rounded-2xl">
-            <thead className="text-xs text-gray-600 uppercase bg-gray-100">
+        <div
+          className="overflow-auto border border-gray-200 rounded-lg"
+          style={{ maxHeight: "400px", minHeight: "200px" }}
+        >
+          <table className="min-w-full text-sm text-left text-gray-700 bg-white">
+            <thead className="text-xs text-gray-600 uppercase bg-gray-100 sticky top-0">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Platform

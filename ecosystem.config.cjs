@@ -14,7 +14,7 @@ module.exports = {
     },
     {
       name: "clickhouse-api",
-      script: "node", 
+      script: "node",
       args: "api/clickhouse.js",
       watch: true,
       env: {
@@ -22,8 +22,8 @@ module.exports = {
         CLICKHOUSE_USERNAME: "default",
         CLICKHOUSE_PASSWORD: "",
         CLICKHOUSE_DATABASE: "default",
-        CLICKHOUSE_PORT: "4001"
-      }
-    }
-  ]
-}
+        CLICKHOUSE_PORT: "4001",
+      },
+    },
+  ],
+};

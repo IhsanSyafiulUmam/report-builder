@@ -183,7 +183,10 @@ const SalesTable: React.FC = () => {
 
   return (
     <div className="overflow-hidden bg-white shadow-lg rounded-xl">
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-auto"
+        style={{ maxHeight: "400px", minHeight: "200px" }}
+      >
         <table className="w-full">
           <thead>
             <tr className="bg-red-800">
@@ -242,7 +245,10 @@ const SummaryTable: React.FC = () => {
 
   return (
     <div className="mt-8 overflow-hidden bg-white shadow-lg rounded-xl">
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-auto"
+        style={{ maxHeight: "400px", minHeight: "200px" }}
+      >
         <table className="w-full">
           <thead>
             <tr className="bg-red-800">
