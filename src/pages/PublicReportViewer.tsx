@@ -25,6 +25,8 @@ import TopResellerSection from "../components/report/sections/TopResellerSection
 import FlashSaleSection from "../components/report/sections/FlashsaleSection";
 import BannerSection from "../components/report/sections/BannerSection";
 import DividerSection from "../components/report/sections/DividerSection";
+import TopBrandChannelSection from "../components/report/sections/TopBrandChannelSection";
+import { ExecutiveSummarySection } from "../components/report/sections/ExecutiveSummarySection";
 import CustomerPerformanceSection from "../components/report/sections/CustomerPerformanceSection";
 import ProductInsightsSection from "../components/report/sections/ProductInsightsSection";
 import SeasonalPatternsSection from "../components/report/sections/SeasonalPatternsSection";
@@ -191,12 +193,17 @@ const PublicReportViewer = () => {
         );
       case "opening":
         return (
-          <OpeningSection
-            section={currentPageData}
-            onUpdate={() => {}}
-            period={report.period}
-            client={clientName}
-          />
+          <div
+            className="relative w-full mb-8 bg-white border border-gray-200 rounded-lg shadow-sm"
+            style={{ aspectRatio: "16/9", minHeight: "400px" }}
+          >
+            <OpeningSection
+              section={currentPageData}
+              onUpdate={() => {}}
+              period={report.period}
+              client={clientName}
+            />
+          </div>
         );
       case "customer_performance":
         return (
@@ -297,7 +304,7 @@ const PublicReportViewer = () => {
           </div>
 
           {/* Actions */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center justify-center p-4 border-t border-gray-200">
             <DownloadButton
               reportTitle={report.title || "Report"}
               variant="dropdown"
@@ -395,18 +402,8 @@ const PublicReportViewer = () => {
       >
         <div className="p-8 mx-auto max-w-8xl">
           {report.sections.map((section) => (
-            <div
-              key={section.id}
-              data-section-id={section.id}
-              className="p-8 mb-8 bg-white border border-gray-200 rounded-lg shadow-sm"
-            >
-              <div className="mb-8">
-                <h1 className="mb-2 text-3xl font-bold text-gray-900">
-                  {section.title}
-                </h1>
-                <div className="w-16 h-1 bg-blue-600 rounded"></div>
-              </div>
-              {/* Render section content using the same logic as renderPageContent */}
+            <div key={section.id} data-section-id={section.id} className="mb-8">
+              {/* Render section content directly without extra wrapper */}
               {(() => {
                 switch (section.type) {
                   case "overview":
@@ -509,12 +506,17 @@ const PublicReportViewer = () => {
                     );
                   case "opening":
                     return (
-                      <OpeningSection
-                        section={section as any}
-                        onUpdate={() => {}}
-                        period={report.period}
-                        client={clientName}
-                      />
+                      <div
+                        className="relative w-full mb-8 bg-white border border-gray-200 rounded-lg shadow-sm"
+                        style={{ aspectRatio: "16/9", minHeight: "400px" }}
+                      >
+                        <OpeningSection
+                          section={section as any}
+                          onUpdate={() => {}}
+                          period={report.period}
+                          client={clientName}
+                        />
+                      </div>
                     );
                   case "customer_performance":
                     return (
@@ -535,6 +537,30 @@ const PublicReportViewer = () => {
                   case "seasonal_patterns":
                     return (
                       <SeasonalPatternsSection
+                        section={section as any}
+                        onUpdate={() => {}}
+                        isEditable={false}
+                      />
+                    );
+                  case "geographic_intelligence":
+                    return (
+                      <GeographicIntelligenceSection
+                        section={section as any}
+                        onUpdate={() => {}}
+                        isEditable={false}
+                      />
+                    );
+                  case "executive_summary":
+                    return (
+                      <ExecutiveSummarySection
+                        section={section as any}
+                        isEditable={false}
+                        onUpdate={() => {}}
+                      />
+                    );
+                  case "top_brand_channel":
+                    return (
+                      <TopBrandChannelSection
                         section={section as any}
                         onUpdate={() => {}}
                         isEditable={false}
