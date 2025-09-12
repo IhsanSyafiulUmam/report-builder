@@ -12,6 +12,12 @@ import { BaseSectionLayout, InsightManager, ActionTitle } from "../shared";
 import ChartComponent from "../ChartComponent";
 import { QueryItem } from "../QueryEditor";
 
+interface FooterInfo {
+  dataSource?: string;
+  period?: string;
+  channel?: string;
+}
+
 interface SalesOverviewSectionProps {
   section: {
     id: string;
@@ -23,6 +29,7 @@ interface SalesOverviewSectionProps {
       chartData: { Month: string; [key: string]: string }[];
       insights?: Array<{ title: string; body: string }>;
       queries?: QueryItem[];
+      footer?: FooterInfo;
     };
   };
   onUpdate: (updates: {
@@ -32,6 +39,7 @@ interface SalesOverviewSectionProps {
       subheadline?: string;
       insights?: Array<{ title: string; body: string }>;
       queries?: QueryItem[];
+      footer?: FooterInfo;
     };
   }) => void;
   isEditable?: boolean;
@@ -47,8 +55,14 @@ const SalesOverviewSection: React.FC<SalesOverviewSectionProps> = ({
   const chartData = section.content.chartData || [];
   const insights = section.content.insights || [];
   const queries = section.content.queries || [];
+  const footer = section.content.footer || {};
+
   const handleQueryEditorChange = (newQueries: QueryItem[]) => {
     onUpdate({ content: { ...section.content, queries: newQueries } });
+  };
+
+  const handleFooterUpdate = (newFooter: FooterInfo) => {
+    onUpdate({ content: { ...section.content, footer: newFooter } });
   };
 
   const handleActionTitleChange = (newTitle: string) => {
@@ -152,7 +166,8 @@ const SalesOverviewSection: React.FC<SalesOverviewSectionProps> = ({
       queries={queries}
       isEditable={isEditable}
       onQueryChange={handleQueryEditorChange}
-      channels={[]}
+      footer={footer}
+      onFooterUpdate={handleFooterUpdate}
       showFooter={true}
     >
       {/* Action Title */}

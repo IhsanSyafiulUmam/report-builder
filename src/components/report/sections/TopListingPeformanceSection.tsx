@@ -6,6 +6,7 @@ import { QueryItem } from "../QueryEditor";
 interface ListingData {
   Platform: string;
   "Listing Name": string;
+  ListingLink?: string;
   "GMV (Bio)": string;
   "% of Brand GMV": string;
   "QoQ Growth": string;
@@ -33,6 +34,9 @@ interface TopListingPerformanceProps {
   }) => void;
   isEditable?: boolean;
 }
+
+const NAME_MAX = 80;
+const trimName = (s: string) => (s.length > NAME_MAX ? s.slice(0, NAME_MAX - 1) + "…" : s);
 
 const TopListingPerformanceSection: React.FC<TopListingPerformanceProps> = ({
   section,
@@ -65,7 +69,6 @@ const TopListingPerformanceSection: React.FC<TopListingPerformanceProps> = ({
       channels={[]}
     >
       <div className="p-8">
-        {/* Action Title */}
         <div className="mb-8 group">
           <ActionTitle
             title={section.content.actionTitle || "Top Listing Performance"}
@@ -101,24 +104,49 @@ const TopListingPerformanceSection: React.FC<TopListingPerformanceProps> = ({
               </tr>
             </thead>
             <tbody>
-              {(section.content.chartData || []).map((item, idx) => (
-                <tr
-                  key={
-                    item["Platform"] && item["Listing Name"]
-                      ? `${item["Platform"]}-${item["Listing Name"]}`
-                      : item["Listing Name"] || idx
-                  }
-                  className="transition border-t border-gray-200 hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {item["Platform"]}
-                  </td>
-                  <td className="px-6 py-4">{item["Listing Name"]}</td>
-                  <td className="px-6 py-4">{item["GMV (Bio)"]}</td>
-                  <td className="px-6 py-4">{item["% of Brand GMV"]}</td>
-                  <td className="px-6 py-4">{item["QoQ Growth"]}</td>
-                </tr>
-              ))}
+              {(section.content.chartData || []).map((item, idx) => {
+                const keyBase =
+                  (item["Platform"] && item["Listing Name"])
+                    ? `${item["Platform"]}-${item["Listing Name"]}`
+                    : item["Listing Name"] || String(idx);
+
+                const link = (item as any).ListingLink as string | undefined;
+                const name = item["Listing Name"];
+
+                return (
+                  <tr
+                    key={keyBase}
+                    className="transition border-t border-gray-200 hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900">
+                      {item["Platform"]}
+                    </td>
+                    <td className="px-6 py-4">
+                      {link ? (
+                        <a
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={name}
+                          className="text-red-700 hover:underline inline-block max-w-[560px] truncate align-middle"
+                        >
+                          {trimName(name)}
+                        </a>
+                      ) : (
+                        <span
+                          title={name}
+                          className="inline-block max-w-[560px] truncate align-middle"
+                        >
+                          {trimName(name)}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">{item["GMV (Bio)"]}</td>
+                    <td className="px-6 py-4">{item["% of Brand GMV"]}</td>
+                    <td className="px-6 py-4">{item["QoQ Growth"]}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

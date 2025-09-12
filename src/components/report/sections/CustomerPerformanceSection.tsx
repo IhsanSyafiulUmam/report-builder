@@ -12,6 +12,12 @@ import { BaseSectionLayout, InsightManager, ActionTitle } from "../shared";
 import ChartComponent from "../ChartComponent";
 import { QueryItem } from "../QueryEditor";
 
+interface FooterInfo {
+  dataSource?: string;
+  period?: string;
+  channel?: string;
+}
+
 interface CustomerPerformanceSectionProps {
   section: {
     id: string;
@@ -23,6 +29,7 @@ interface CustomerPerformanceSectionProps {
       chartData: { Customer: string; [key: string]: string }[];
       insights?: Array<{ title: string; body: string }>;
       queries?: QueryItem[];
+      footer?: FooterInfo;
     };
   };
   onUpdate: (updates: {
@@ -32,6 +39,7 @@ interface CustomerPerformanceSectionProps {
       subheadline?: string;
       insights?: Array<{ title: string; body: string }>;
       queries?: QueryItem[];
+      footer?: FooterInfo;
     };
   }) => void;
   isEditable?: boolean;
@@ -47,9 +55,14 @@ const CustomerPerformanceSection: React.FC<CustomerPerformanceSectionProps> = ({
   const chartData = section.content.chartData || [];
   const insights = section.content.insights || [];
   const queries = section.content.queries || [];
+  const footer = section.content.footer || {};
 
   const handleQueryEditorChange = (newQueries: QueryItem[]) => {
     onUpdate({ content: { ...section.content, queries: newQueries } });
+  };
+
+  const handleFooterUpdate = (newFooter: FooterInfo) => {
+    onUpdate({ content: { ...section.content, footer: newFooter } });
   };
 
   const handleActionTitleChange = (newTitle: string) => {
@@ -155,7 +168,8 @@ const CustomerPerformanceSection: React.FC<CustomerPerformanceSectionProps> = ({
       queries={queries}
       isEditable={isEditable}
       onQueryChange={handleQueryEditorChange}
-      channels={[]}
+      footer={footer}
+      onFooterUpdate={handleFooterUpdate}
       showFooter={true}
     >
       {/* Action Title */}

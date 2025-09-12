@@ -5,13 +5,16 @@ interface CustomerData {
 
 interface QueryResults {
   top_customers?: CustomerData[];
+  top_customers_ch?: CustomerData[]; // Add ClickHouse data
   [key: string]: unknown;
 }
 
 export default function processCustomerPerformance(queryResults: QueryResults) {
-  // Get data from the single "top_customers" query
+  // Try to get data from BigQuery first, then ClickHouse, then fallback to empty array
   const customerData = Array.isArray(queryResults.top_customers)
     ? queryResults.top_customers
+    : Array.isArray(queryResults.top_customers_ch)
+    ? queryResults.top_customers_ch
     : [];
 
   // Process top customers data and format it like sales overview
@@ -27,6 +30,7 @@ export default function processCustomerPerformance(queryResults: QueryResults) {
   console.log("Processed customer performance data:", {
     chartData: chartData.length,
     totalCustomers: customerData.length,
+    dataSource: queryResults.top_customers ? "BigQuery" : "ClickHouse",
   });
 
   return {

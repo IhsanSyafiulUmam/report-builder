@@ -31,6 +31,7 @@ export async function processReport(
       period: report.period,
       brandFilter: report.brand_filter,
       dataset: report.dataset,
+      databaseSource: report.database_source, // Pass database source to processor
     });
     updatedSections.push(updated);
     if (onProgress) onProgress(i + 1, total);

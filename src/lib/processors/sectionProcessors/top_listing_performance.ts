@@ -18,8 +18,9 @@ export default function processTopListingPerformance(
   const chartData = items.map((item: any) => {
     const data = item.json || item;
     return {
-      Platform: data.channel || '',
+      Platform: data.Channel || '',
       "Listing Name": data.ListingName || '',
+      "ListingLink": data.ListingLink || '',
       "GMV (Bio)": formatGMV(data.GMV),
       "% of Brand GMV": parseFloat(data.pct_of_brand_gmv).toFixed(2) + '%',
       "QoQ Growth": parseFloat(data.qoq_growth_pct).toFixed(2) + '%',

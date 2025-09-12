@@ -1,13 +1,23 @@
 export default function processGeographicIntelligence(results: unknown) {
-  // Handle data from CSV processor format
-  const resultsObj = results as { top_locations?: unknown[] };
+  // Handle data from both BigQuery and ClickHouse
+  const resultsObj = results as { 
+    top_locations?: unknown[]; 
+    top_locations_ch?: unknown[]; // Add ClickHouse support
+  };
+  
+  // Try BigQuery data first, then ClickHouse, then fallback
   const rawData = Array.isArray(results)
     ? results
     : Array.isArray(resultsObj?.top_locations)
     ? resultsObj.top_locations
+    : Array.isArray(resultsObj?.top_locations_ch)
+    ? resultsObj.top_locations_ch
     : [];
 
-  console.log("Processing geographic intelligence data:", rawData);
+  console.log("Processing geographic intelligence data:", {
+    rawDataLength: rawData.length,
+    dataSource: resultsObj?.top_locations ? "BigQuery" : "ClickHouse",
+  });
 
   // Transform data to chartData format expected by component
   const chartData = rawData.map(

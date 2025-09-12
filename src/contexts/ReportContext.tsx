@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { supabase } from "../supabaseClient";
+import { data } from "react-router-dom";
 
 export interface QueryItem {
   id: string;
@@ -54,8 +55,9 @@ export interface Report {
   client_id: string;
   folder_id?: string;
   status: "draft" | "in_progress" | "review" | "completed";
-  brandFilter?: string;
+  brand_filter?: string;
   period?: string;
+  database_source?: "bigquery" | "clickhouse"; // New field for database source
   sections: ReportSection[];
   created_at: string;
   updated_at: string;
@@ -181,6 +183,7 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
             period: report.period,
             brand_filter: report.brand_filter,
             sections: report.sections,
+            database_source: "clickhouse", 
           })
           .select()
           .single();
@@ -212,6 +215,7 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateReport = useCallback(
     async (id: string, updates: Partial<Report>) => {
       try {
+        console.log("Updating report:", id, "with updates:", updates);
         const { data, error } = await supabase
           .from("reports")
           .update({
@@ -220,8 +224,9 @@ export const ReportProvider: React.FC<{ children: React.ReactNode }> = ({
             status: updates.status,
             sections: updates.sections,
             folder_id: updates.folder_id,
-            brand_filter: updates.brandFilter,
+            brand_filter: updates.brand_filter ,
             period: updates.period,
+            database_source: updates.database_source,
           })
           .eq("id", id)
           .select()

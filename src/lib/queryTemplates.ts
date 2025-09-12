@@ -1,3 +1,11 @@
+export type DatabaseType = "bigquery" | "clickhouse";
+
+export interface QueryTemplate {
+  id: string;
+  query: string;
+  database?: DatabaseType; // Optional, defaults to bigquery for backward compatibility
+}
+
 export const queryTemplates = {
   sales_overview: [
     {
@@ -356,6 +364,20 @@ export const queryTemplates = {
             10
       `,
     },
+    {
+      id: "top_customers_ch",
+      database: "clickhouse",
+      query: `
+        SELECT
+          NamaPelanggan AS customer_name,
+          SUM(Penjualan) AS total_sales
+        FROM sales
+        WHERE Tanggal >= subtractMonths(now(), 12)
+        GROUP BY NamaPelanggan
+        ORDER BY total_sales DESC
+        LIMIT 10
+      `,
+    },
   ],
 
   product_insights: [
@@ -367,6 +389,20 @@ export const queryTemplates = {
           SUM(Penjualan) as total_revenue
         FROM \`biqquery-468807.staging.sales\`
         WHERE DATE(Tanggal) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+        GROUP BY NamaBarang
+        ORDER BY total_revenue DESC
+        LIMIT 10
+      `,
+    },
+    {
+      id: "top_products_ch",
+      database: "clickhouse",
+      query: `
+        SELECT
+          NamaBarang as product_name,
+          SUM(Penjualan) as total_revenue
+        FROM sales
+        WHERE Tanggal >= subtractMonths(now(), 12)
         GROUP BY NamaBarang
         ORDER BY total_revenue DESC
         LIMIT 10
@@ -432,6 +468,19 @@ export const queryTemplates = {
           LIMIT 10
         )
         SELECT * FROM location_data
+      `,
+    },
+    {
+      id: "top_locations_ch",
+      database: "clickhouse",
+      query: `
+        SELECT
+          Lokasi as Location,
+          concat('Rp ', toString(round(SUM(Penjualan) / 1000000, 1)), 'M') as Total_Sales
+        FROM sales
+        GROUP BY Lokasi
+        ORDER BY SUM(Penjualan) DESC
+        LIMIT 10
       `,
     },
   ],

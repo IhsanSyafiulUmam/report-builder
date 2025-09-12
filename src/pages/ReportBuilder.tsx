@@ -42,6 +42,7 @@ interface Report {
   status?: string;
   period?: string;
   brand_filter?: string;
+  database_source?: "bigquery" | "clickhouse"; // Add database source
   sections: ReportSectionType[];
 }
 
@@ -50,7 +51,8 @@ type SavedData = {
   client_id: string;
   status: string;
   period: string;
-  brandFilter: string;
+  brand_filter: string;
+  database_source: "bigquery" | "clickhouse"; // Add database source
   sections: ReportSectionType[];
 };
 
@@ -92,6 +94,9 @@ const ReportBuilder = () => {
   const [runProgress, setRunProgress] = useState({ current: 0, total: 0 });
   const [period, setPeriod] = useState("");
   const [brandFilter, setBrandFilter] = useState("");
+  const [databaseSource, setDatabaseSource] = useState<
+    "bigquery" | "clickhouse"
+  >("bigquery");
 
   useEffect(() => {
     if (reportId && reportId !== "new") {
@@ -101,6 +106,7 @@ const ReportBuilder = () => {
         setSelectedClient(report.client_id);
         setPeriod(report.period || "");
         setBrandFilter(report.brand_filter || "");
+        setDatabaseSource(report.database_source || "bigquery"); // Load database source
         const seenIds = new Set<string>();
         const safeSections = Array.isArray(report.sections)
           ? report.sections.map((section, idx) => {
@@ -232,14 +238,19 @@ const ReportBuilder = () => {
         };
       });
 
+      console.log(brandFilter)
+
       const reportData = {
         title: reportTitle.trim(),
         client_id: selectedClient,
         status: "draft" as const,
         period: period,
         brand_filter: brandFilter,
+        database_source: databaseSource, // Include database source
         sections: fixedSections,
       };
+
+      console.log(reportData)
 
       if (reportId && reportId !== "new") {
         await updateReport(reportId, reportData);
@@ -270,7 +281,8 @@ const ReportBuilder = () => {
         client_id: selectedClient,
         status: "draft" as const,
         period: period,
-        brandFilter: brandFilter,
+        brand_filter: brandFilter,
+        database_source: databaseSource,
         sections: sections.map((section) => ({
           ...section,
           title: section.title.trim(),
@@ -303,7 +315,8 @@ const ReportBuilder = () => {
         client_id: report.client_id || "",
         status: report.status || "draft",
         period: report.period || "",
-        brandFilter: report.brand_filter || "",
+        brand_filter: report.brand_filter || "",
+        database_source: report.database_source || "bigquery",
         sections: Array.isArray(report.sections)
           ? report.sections.map((section: ReportSectionType) => ({
               ...section,
@@ -502,6 +515,23 @@ const ReportBuilder = () => {
                     placeholder="e.g. Erha, Somethinc, Wardah"
                     className="w-full px-4 py-3 placeholder-gray-400 transition-all duration-200 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 hover:bg-white"
                   />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Database Source
+                  </label>
+                  <select
+                    value={databaseSource}
+                    onChange={(e) =>
+                      setDatabaseSource(
+                        e.target.value as "bigquery" | "clickhouse"
+                      )
+                    }
+                    className="w-full px-4 py-3 transition-all duration-200 border border-gray-200 cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 hover:bg-white"
+                  >
+                    <option value="bigquery">BigQuery</option>
+                    <option value="clickhouse">ClickHouse</option>
+                  </select>
                 </div>
               </div>
             </div>

@@ -13,9 +13,9 @@ interface BrandPerformanceSubCategoryProps {
       subheadline?: string;
       chartData?: Array<{
         Subcategory: string;
-        "Brand GMV (Bio)": string;
+        "Brand GMV": string;
         "Brand Share (%)": string;
-        "QoQ Growth": string;
+        "MoM Growth": string;
         "Market Growth": string;
         "Performance Signal": string;
       }>;
@@ -96,13 +96,13 @@ const BrandPerformanceSubCategorySection: React.FC<
                   Subcategory
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Brand GMV (Bio)
+                  Brand GMV
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Brand Share (%)
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  QoQ Growth
+                  MoM Growth
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Market Growth
@@ -121,9 +121,9 @@ const BrandPerformanceSubCategorySection: React.FC<
                   <td className="px-6 py-4 font-medium text-gray-900">
                     {item.Subcategory}
                   </td>
-                  <td className="px-6 py-4">{item["Brand GMV (Bio)"]}</td>
+                  <td className="px-6 py-4">{item["Brand GMV"]}</td>
                   <td className="px-6 py-4">{item["Brand Share (%)"]}</td>
-                  <td className="px-6 py-4">{item["QoQ Growth"]}</td>
+                  <td className="px-6 py-4">{item["MoM Growth"]}</td>
                   <td className="px-6 py-4">{item["Market Growth"]}</td>
                   <td className="px-6 py-4">{item["Performance Signal"]}</td>
                 </tr>

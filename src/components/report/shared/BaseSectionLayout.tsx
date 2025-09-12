@@ -1,14 +1,21 @@
 import React from "react";
-import { SectionLayout, ReportFooter } from "./index";
+import { SectionLayout } from "./index";
 import QueryEditor, { QueryItem } from "../QueryEditor";
+import EditableFooter from "./EditableFooter";
+
+interface FooterInfo {
+  dataSource?: string;
+  period?: string;
+  channel?: string;
+}
 
 interface BaseSectionLayoutProps {
   queries?: QueryItem[];
   isEditable?: boolean;
   onQueryChange?: (queries: QueryItem[]) => void;
   children: React.ReactNode;
-  period?: string;
-  channels?: string[];
+  footer?: FooterInfo;
+  onFooterUpdate?: (footer: FooterInfo) => void;
   showFooter?: boolean;
 }
 
@@ -17,8 +24,8 @@ const BaseSectionLayout: React.FC<BaseSectionLayoutProps> = ({
   isEditable = false,
   onQueryChange,
   children,
-  period = "Apr - Jun 2025",
-  channels = [],
+  footer,
+  onFooterUpdate,
   showFooter = true,
 }) => {
   return (
@@ -32,7 +39,11 @@ const BaseSectionLayout: React.FC<BaseSectionLayoutProps> = ({
       )}
       {children}
       {showFooter && (
-        <ReportFooter period={period} channels={channels.join(", ")} />
+        <EditableFooter
+          footer={footer}
+          onUpdate={onFooterUpdate}
+          isEditable={isEditable}
+        />
       )}
     </SectionLayout>
   );
