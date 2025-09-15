@@ -15,6 +15,7 @@ const CONNECT_SRC = [
   "https://qxzqwqxqjbawsrftrhzz.supabase.co",
   "wss://qxzqwqxqjbawsrftrhzz.supabase.co",
   "https://be-report.san-labs.my.id",
+  "https://be-report.markethac.id",
   "https://*.san-labs.my.id",
   "http://localhost:4000",
   "http://127.0.0.1:4000",
