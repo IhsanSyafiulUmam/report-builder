@@ -9,6 +9,7 @@ import {
   X,
   Loader2,
   Check,
+  Edit3,
 } from "lucide-react";
 import DownloadButton from "../components/report/DownloadButton";
 
@@ -423,11 +424,18 @@ const ReportViewer = () => {
 
           {/* Actions */}
           <div className="p-4 space-y-3 border-t border-gray-200">
-            <DownloadButton
+            <Link
+              to={`/reports/builder/${reportId}`}
+              className="flex items-center justify-center w-full px-4 py-2 text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
+            >
+              <Edit3 size={18} className="mr-2" />
+              Edit Report
+            </Link>
+            {/* <DownloadButton
               reportTitle={report.title || "Report"}
               variant="dropdown"
               className="w-full"
-            />
+            /> */}
             <button
               className="flex items-center justify-center w-full px-4 py-2 text-gray-700 transition-colors duration-200 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
               onClick={handleShare}

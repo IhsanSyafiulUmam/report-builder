@@ -12,7 +12,7 @@ const SectionLayout: React.FC<SectionLayoutProps> = ({
   children,
   className = "",
   minHeight = "min-h-[400px]",
-  backgroundColor = "bg-gray-50",
+  backgroundColor = "bg-white",
   padding = "px-4 py-4 lg:px-12",
 }) => {
   return (

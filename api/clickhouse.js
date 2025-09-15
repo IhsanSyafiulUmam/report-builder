@@ -44,7 +44,7 @@ app.post("/api/clickhouse", async (req, res) => {
   }
 });
 
-const PORT = process.env.CLICKHOUSE_PORT || 4001;
+const PORT = process.env.CLICKHOUSE_PORT || 4000;
 app.listen(PORT, () => {
   console.log(`ClickHouse API listening on port ${PORT}`);
 });

@@ -237,6 +237,14 @@ const PublicReportViewer = () => {
             isEditable={false}
           />
         );
+      case "top_brand_channel":
+        return (
+          <TopBrandChannelSection
+            section={currentPageData as any}
+            onUpdate={() => {}}
+            isEditable={false}
+          />
+        );
       default:
         return null;
     }
@@ -305,11 +313,11 @@ const PublicReportViewer = () => {
 
           {/* Actions */}
           <div className="flex items-center justify-center p-4 border-t border-gray-200">
-            <DownloadButton
+            {/* <DownloadButton
               reportTitle={report.title || "Report"}
               variant="dropdown"
               className="w-full"
-            />
+            /> */}
           </div>
         </div>
       </div>

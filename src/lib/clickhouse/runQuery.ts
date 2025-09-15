@@ -3,7 +3,7 @@ export async function runClickHouseQuery(
   params?: Record<string, unknown>
 ) {
   try {
-    const response = await fetch("http://localhost:4001/api/clickhouse", {
+    const response = await fetch("http://localhost:4000/api/clickhouse", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
