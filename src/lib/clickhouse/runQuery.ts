@@ -3,13 +3,16 @@ export async function runClickHouseQuery(
   params?: Record<string, unknown>
 ) {
   try {
-    const response = await fetch("http://be-report.markethac.id/api/clickhouse", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sql, params }),
-    });
+    const response = await fetch(
+      "https://be-report.markethac.id/api/clickhouse",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sql, params }),
+      }
+    );
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Unknown error");
     return data.rows;
