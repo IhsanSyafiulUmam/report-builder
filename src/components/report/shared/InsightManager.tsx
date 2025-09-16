@@ -27,11 +27,10 @@ const InsightManager: React.FC<InsightManagerProps> = ({
   const content = (
     <div className={className}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-900">Insights</h3>
+      <div className="flex items-center justify-between pb-2 mb-3 border-b border-gray-200">
         {isEditable && (
           <button
-            className="px-2 py-1 text-xs text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+            className="px-2 py-1 text-xs text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
             onClick={onAddInsight}
           >
             + Add
@@ -41,7 +40,7 @@ const InsightManager: React.FC<InsightManagerProps> = ({
       
       {/* Scrollable Content Area */}
       <div 
-        className="flex-1 overflow-y-auto overflow-x-hidden pr-2 space-y-2"
+        className="flex-1 pr-2 space-y-2 overflow-x-hidden overflow-y-auto"
         style={{
           maxHeight: '400px', // Ensure it fits within slide dimensions
           scrollbarWidth: 'thin',
@@ -62,10 +61,10 @@ const InsightManager: React.FC<InsightManagerProps> = ({
             />
           ))
         ) : (
-          <div className="text-center py-6 text-gray-500">
+          <div className="py-6 text-center text-gray-500">
             <div className="text-sm">No insights yet</div>
             {isEditable && (
-              <div className="text-xs mt-1">Click "+ Add" to create your first insight</div>
+              <div className="mt-1 text-xs">Click "+ Add" to create your first insight</div>
             )}
           </div>
         )}
