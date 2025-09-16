@@ -27,7 +27,7 @@ const InsightManager: React.FC<InsightManagerProps> = ({
   const content = (
     <div className={className}>
       {/* Header */}
-      <div className="flex items-center justify-between pb-2 mb-3 border-b border-gray-200">
+      <div className="flex items-center justify-between pb-2 mb-3">
         {isEditable && (
           <button
             className="px-2 py-1 text-xs text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
